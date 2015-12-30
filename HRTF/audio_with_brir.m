@@ -1,19 +1,19 @@
-function out = hrtf_audio(fn,brir,points_number,gain)
-%   usage: out = hrtf_audio('piano48k.wav',6,10)
+function out = audio_with_brir(fn,brir)
 %------------------------------------------------------------------------------------------------------------
+%   usage: out = audio_with_brir('nokia.wav',brir)
 %   Input: 
 %       fn: file name 
-%       brir:   brir datebase, the number must DOUBLE EQUAL to points_number for each
+%       brir:   BRIR datebase, the number must DOUBLE EQUAL to points_number for each
 %               sound segment. brir must so looks like:
 %                           [L1 R1 L2 R2.......Ln Rn]    
 %               with L and R have only one column!
-%       points_number:  how many segement will be played in a circle
-%       gain: gain value for the output
-%
 %   Output:
-%       out: audio with hrtf in piece of "points_number" 
-
-%------------------------------------function start------------------------------------------------------    
+%       out: returns stero audio with HRTF in piece of "points_number" 
+%   Author: 	Hong Ma
+%   E-mail:     contact@mahong.org
+%   Created:    Dec 2015
+%   TU Ilmenau | IMT | Elektronische Medientechnik. 
+%------------------------------------------------------------------------------------------------------------
 
 % read audio file
     [audioIn,fs] = audioread(fn);
@@ -25,6 +25,8 @@ function out = hrtf_audio(fn,brir,points_number,gain)
     % brir points for azimut in grad {300, 330, 0, 60, 120, 180} 
     % the numbers of the synthesis points
 
+    % points_number:  how many segement will be played in a circle
+    points_number = size(brir,2)/2;
     % the number of padding zeros
     remainder = mod(duration,points_number); 
 
@@ -45,19 +47,7 @@ function out = hrtf_audio(fn,brir,points_number,gain)
     % pass filter
     lowpass=fir1(1000,20000/fs*2); %low pass filter with 20000Hz
     highpass = fir1(1000,20/fs*2,'high');  %high pass filter with 20Hz
-
-%     % read brir  {300, 330, 0, 60, 120, 180}
-%     BRIR = getTotalBRIR();
-%     BRIR300 = BRIR(:,1:2);
-%     BRIR330 = BRIR(:,3:4);
-%     BRIR0 = BRIR(:,5:6);
-%     BRIR60 = BRIR(:,7:8);
-%     BRIR120 = BRIR(:,9:10);
-%     BRIR180 = BRIR(:,11:12);
-% 
-%     % get a new BRIR array for each of the segment,(the number is equal to  points_number)
-%     newBRIR = [ BRIR0 BRIR60  BRIR120 BRIR180 BRIR300 BRIR330];
-
+    
     % init segment piece
     segment_L = zeros(points_number,step);
     segment_R = zeros(points_number,step);
@@ -74,7 +64,6 @@ function out = hrtf_audio(fn,brir,points_number,gain)
     end
 
     % audio with fade in and fade out
-
     for n = 1 : points_number
 
         % the last segment need only fade in, so we make that later, first make
@@ -96,10 +85,6 @@ function out = hrtf_audio(fn,brir,points_number,gain)
     % length: total piece length = step
      left = [segment_L(1,1:end - (window_N/2)) segment_L(1,(end - window_N/2 +1):end) + segment_L(2,1:(window_N/2))];  
      right = [segment_R(1,1:end - (window_N/2)) segment_R(1,(end - window_N/2 + 1):end) + segment_R(2,1:(window_N/2))];
-
-    % init left and right
-    % left_middle = zeros(points_number-1,step - window_N/2);
-    % right_middle = zeros(points_number-1,step - window_N/2);
 
     % step 2: for the rest segments,except the last.
     % length: total piece - head = step - window_N/2
@@ -129,12 +114,19 @@ function out = hrtf_audio(fn,brir,points_number,gain)
     
     % output
     out = [out_left' out_right'];
-    out = out * gain;
+    % normalization
+    max_value = max(max(abs(out)));
+    out = out / max_value;
+    
+  %------------------------------------------------------------------------------------------------------------  
     % write the wav and play the audio
-    audiowrite('hrtf_audio.wav',out,fs);
-    output = audioplayer(out,fs);
-    output.play;
-
+    % cd('output'); % enter the folder 'output'
+    % audiowrite('audio_with_brir',out,fs);
+    % cd('..'); % back 
+    
+    % play the audio
+    % output = audioplayer(out,fs);
+    % output.play;
 end
 
 
