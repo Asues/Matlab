@@ -98,9 +98,6 @@ function out = audio_with_brir(fn,brir)
     % step 3: for the last segment:
     % length: total piece - head = step - window_N/2
     n = points_number;
-%     left = [left segment_L(n,1:(window_N/2))+segment_L(n-1,(end - window_N/2 + 1):end) segment_L(n,(window_N/2+1):end)];
-%     right = [right segment_R(n,1:(window_N/2))+segment_R(n-1,(end - window_N/2 + 1):end) segment_R(n,(window_N/2+1):end)];
-    
     left = [left segment_L(n,(window_N/2 +1):end)];
     right = [right segment_R(n,(window_N/2 + 1):end)];
 
