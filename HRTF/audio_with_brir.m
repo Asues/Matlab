@@ -12,6 +12,7 @@ function out = audio_with_brir(fn,brir)
 %       out: returns stero audio with HRTF in piece of "points_number" 
 %   Author: 	Hong Ma
 %   Created:    Dec 2015
+%   E-mail:     contact(at)mahong.org
 %   TU Ilmenau | IMT | Elektronische Medientechnik. 
 %------------------------------------------------------------------------------------------------------------
 
