@@ -7,10 +7,10 @@ function out = audio_with_brir(fn,brir)
 %               sound segment. brir must so looks like:
 %                           [L1 R1 L2 R2.......Ln Rn]    
 %               with L and R have only one column!
+%
 %   Output:
 %       out: returns stero audio with HRTF in piece of "points_number" 
 %   Author: 	Hong Ma
-%   E-mail:     contact@mahong.org
 %   Created:    Dec 2015
 %   TU Ilmenau | IMT | Elektronische Medientechnik. 
 %------------------------------------------------------------------------------------------------------------
@@ -41,7 +41,7 @@ function out = audio_with_brir(fn,brir)
     step = length(audioIn) / points_number; 
 
     % length for windos size
-    window_N = 2048; 
+    window_N = 512; 
     window = hann(window_N)';
    
     % pass filter
@@ -73,8 +73,8 @@ function out = audio_with_brir(fn,brir)
         segment_R(n,1:window_N/2) = segment_R(n,1:window_N/2) .* window(1:window_N/2); 
 
         %add fade out for each segment at the end
-            segment_L(n,(end - window_N/2 + 1):end) = segment_L(n,(end - window_N/2 + 1):end) .* window((window_N/2+1):end); 
-            segment_R(n,(end - window_N/2 + 1):end) = segment_R(n,(end - window_N/2 + 1):end) .* window((window_N/2+1):end);    
+        segment_L(n,(end - window_N/2 + 1):end) = segment_L(n,(end - window_N/2 + 1):end) .* window((window_N/2+1):end); 
+        segment_R(n,(end - window_N/2 + 1):end) = segment_R(n,(end - window_N/2 + 1):end) .* window((window_N/2+1):end);    
     end
 
     % calculattion: segment = fade in + audio + [fade out + fade in (from next
@@ -85,18 +85,23 @@ function out = audio_with_brir(fn,brir)
     % length: total piece length = step
      left = [segment_L(1,1:end - (window_N/2)) segment_L(1,(end - window_N/2 +1):end) + segment_L(2,1:(window_N/2))];  
      right = [segment_R(1,1:end - (window_N/2)) segment_R(1,(end - window_N/2 + 1):end) + segment_R(2,1:(window_N/2))];
+       
 
     % step 2: for the rest segments,except the last.
     % length: total piece - head = step - window_N/2
+    
     for n = 2 : points_number - 1 % except the last segment
         left = [left segment_L(n,(window_N/2+1):end-(window_N/2)) segment_L(n,(end - window_N/2 + 1):end) + segment_L(n+1,1:(window_N/2))];
         right = [right segment_R(n,(window_N/2+1):end-(window_N/2)) segment_R(n,(end - window_N/2 + 1):end) + segment_R(n+1,1:(window_N/2))];
     end 
-
+    
     % step 3: for the last segment:
     % length: total piece - head = step - window_N/2
     n = points_number;
-    left = [left segment_L(n,(window_N/2 + 1):end)];
+%     left = [left segment_L(n,1:(window_N/2))+segment_L(n-1,(end - window_N/2 + 1):end) segment_L(n,(window_N/2+1):end)];
+%     right = [right segment_R(n,1:(window_N/2))+segment_R(n-1,(end - window_N/2 + 1):end) segment_R(n,(window_N/2+1):end)];
+    
+    left = [left segment_L(n,(window_N/2 +1):end)];
     right = [right segment_R(n,(window_N/2 + 1):end)];
 
     % find max value 
