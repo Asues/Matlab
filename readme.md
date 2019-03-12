@@ -5,4 +5,4 @@
 您可以使用该函数，但是请勿用于商业目的，该函数主要运行音频文件与CIPIC数据库的 KEMAR 21 号来实现3D音效
 如有其它问题欢迎邮件或者网上评论留言
 
-[联系方式](mailto:email.mahong.me)
+[联系方式](mailto:email@mahong.me)
