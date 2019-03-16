@@ -7,7 +7,7 @@ For details you may see the link below (only chinese, sorry for that)
 [Link1](https://www.mahong.me/archives/97) 
 [Link2](https://www.mahong.me/archives/123)
 
-[Contact] (mailto:email@mahong.me)
+[Contact](mailto:email@mahong.me)
 
 ##尊重原创，请勿转载!  
 
