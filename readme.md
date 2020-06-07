@@ -12,6 +12,7 @@ For details you may see the link below (only chinese, sorry for that)
 ##尊重原创，请勿转载!  
 
 作者：*图林根的烤肠，*如有纰漏欢迎指出。
+如果无法下载，可以移步[百度网盘]（https://pan.baidu.com/s/1dslhSYPa3bqSkioPjJtwpw ）密码:lyi6
 
 您可以使用该函数，但是请勿用于商业目的，该函数主要运行音频文件与CIPIC数据库的 KEMAR 21 号来实现3D音效
 如有其它问题欢迎邮件或者网上评论留言
